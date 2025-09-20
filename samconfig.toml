@@ -1,0 +1,12 @@
+version = 0.1
+
+[default.deploy.parameters]
+stack_name = "app"
+resolve_s3 = true
+s3_prefix = "app"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+disable_rollback = true
+parameter_overrides = "RawBucketName=\"ai-portal-raw-1758322156 \" ExportBucketName=\"ai-portal-exports-1758322164\" KnowledgeBaseId=\"OUAAXKX49A\" DataSourceId=\"R6HJQ4NV5P\" ModelArn=\"arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0\""
+image_repositories = []

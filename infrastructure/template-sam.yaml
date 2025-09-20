@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AI Compliance Portal - API (Lambda + API Gateway)
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 30
+    MemorySize: 1024
+
+Parameters:
+  RawBucketName:
+    Type: String
+  ExportBucketName:
+    Type: String
+  KnowledgeBaseId:
+    Type: String
+  DataSourceId:
+    Type: String
+  ModelArn:
+    Type: String
+
+Resources:
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../backend/
+      Handler: app.handler
+      Policies:
+        - AWSLambdaBasicExecutionRole     # Logging
+        - AmazonS3FullAccess              # Easy access to S3
+        - AmazonBedrockFullAccess         # Easy access to Bedrock
+      Environment:
+        Variables:
+          KB_ID: !Ref KnowledgeBaseId
+          DATA_SOURCE_ID: !Ref DataSourceId
+          MODEL_ARN: !Ref ModelArn
+          RAW_BUCKET: !Ref RawBucketName
+          EXPORT_BUCKET: !Ref ExportBucketName
+      Events:
+        Api:
+          Type: HttpApi
+
+Outputs:
+  ApiEndpoint:
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+    Description: HTTP API endpoint
